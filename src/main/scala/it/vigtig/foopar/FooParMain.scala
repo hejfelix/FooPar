@@ -24,7 +24,8 @@ trait FooParMain extends ArgsParser
     val ppn = args.getValueOr("-fpppn", "1").toInt
     worldSize = args.getValueOr("-fpnp", (ppn * (hosts(machinefile).size)).toString).toInt
     var rank = hostIndex(machinefile)
-
+    println(rank)
+    println(rank*ppn until (rank*ppn + ppn))
     /*
      * TODO: should read config and pick distributor!! 
      * (but reflection is still kinda yucky...)
@@ -36,22 +37,23 @@ trait FooParMain extends ArgsParser
       dist.run(newApp _)
       dist.finish()
     } else {*/
-      val distributors = rank * ppn until (rank * ppn + ppn) map (i =>
+    
+    val distributors = rank * ppn until (rank * ppn + ppn) map (i =>
 
-        new PureDistributor(i, worldSize))
-      distributors foreach { dist =>
-        val t = new Thread {
-          override def run {
-            dist.initialize(args)
-            //            val startTime = time()
-            if (dist.globalRank < worldSize) //Only start selected number of processes
-              dist.run(newApp _)
-            //            println(dist.globalRank + ": threadusertime taken for run = " + (time() - startTime) / 1000000000d)
-            dist.finish
-          }
+      new PureDistributor(i, worldSize))
+    distributors foreach { dist =>
+      val t = new Thread {
+        override def run {
+          dist.initialize(args)
+          //            val startTime = time()
+          if (dist.globalRank < worldSize) //Only start selected number of processes
+            dist.run(newApp _)
+          //            println(dist.globalRank + ": threadusertime taken for run = " + (time() - startTime) / 1000000000d)
+          dist.finish
         }
-        t.start
       }
+      t.start
+    }
     //}
 
   }

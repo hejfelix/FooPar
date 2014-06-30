@@ -11,41 +11,67 @@ import it.vigtig.foopar.comm.Process
 import it.vigtig.foopar.config.ArgsParser
 import it.vigtig.foopar.config.HostManager
 import java.net.InetAddress
+import akka.actor.ActorRef
+import akka.actor.Identify
+import scala.concurrent.Await
+import akka.util.Timeout
+import akka.actor.ActorDSL._
+
 
 case class Finish()
 object PureDistributor extends HostManager {
 
-  def confForIP(ip: String, port: String) = s"""
+//  def confForIP(ip: String, port: String) = s"""
+//akka {
+//  actor {
+//    provider = "akka.remote.RemoteActorRefProvider"
+//  }
+//  remote { 
+//		  enabled-transports = ["akka.remote.netty.tcp"]
+//  
+//		  netty.tcp.hostname = "$ip" 
+//		  netty.tcp.port = $port
+//		  netty.tcp.message-frame-size = 20 MiB
+//		  //netty.tcp {
+//		//	  write-buffer-high-water-mark = 148000b
+//			//  send-buffer-size = 148000b
+//			 // receive-buffer-size = 148000b
+//		  //}
+//  }
+//
+//  event-handlers = []
+//  loglevel=WARNING
+//  
+//}    
+//
+//  
+//my-custom-dispatcher {
+////    type = PinnedDispatcher
+//    executor = thread-pool-executor
+//    # 10 years should be enough
+////    thread-pool-executor.keep-alive-time = 315360000s
+//    # note that disabling core timeout altogether doesn't work
+//    # until ticket 2856 is fixed
+//    thread-pool-executor.allow-core-timeout = off
+//	mailbox-type = "akka.dispatch.UnboundedDequeBasedMailbox"
+//}
+//  """
+  
+   def confForIP(ip: String, port: String) = s"""
 akka {
   actor {
     provider = "akka.remote.RemoteActorRefProvider"
-    serializers {
-      proto = "akka.remote.serialization.ProtobufSerializer"
-	  felix = "it.vigtig.foopar.comm.pure.MyAkkaSerializer"
-    }
-    serialization-bindings {
-//		  "it.vigtig.foopar.test.LazyMatrix" = felix
-//		  "java.io.Serializable" = felix
-//		  "[B" = felix
-    }
   }
-  
-  remote.netty.tcp {
-		  write-buffer-high-water-mark = 148000b
-		  send-buffer-size = 148000b
-		  receive-buffer-size = 148000b
-  }
-  remote.netty.hostname = "$ip" 
-  remote.netty.port = $port
-  remote.netty.message-frame-size = 20 MiB
-  event-handlers = []
-  loglevel=WARNING
-  #proto = "akka.serialization.ProtobufSerializer"
-  
-}    
-
-  
-my-custom-dispatcher {
+  remote {
+    enabled-transports = ["akka.remote.netty.tcp"]
+    netty.tcp {
+      hostname = "$ip" 
+      port = $port
+    }
+ }
+}
+      
+      my-custom-dispatcher {
 //    type = PinnedDispatcher
     executor = thread-pool-executor
     # 10 years should be enough
@@ -55,8 +81,13 @@ my-custom-dispatcher {
     thread-pool-executor.allow-core-timeout = off
 	mailbox-type = "akka.dispatch.UnboundedDequeBasedMailbox"
 }
+
+		  netty.tcp.hostname = "$ip" 
+		  netty.tcp.port = $port
+
   """
   val conf = confForIP(getIP, "2552")
+  println(conf)
   //  println("Loaded config: " + conf, "from " + hostName)
   private var system: Option[ActorSystem] = None
   def getSystem(machinefile: String) = synchronized {
@@ -104,7 +135,7 @@ class PureDistributor(val index: Int, val worldSize: Int) extends Distributor
         Thread.sleep(1000)
         val npp = args.getValueOr("-fpppn", "1").toInt
 
-        val myaddr = sys.asInstanceOf[ExtendedActorSystem].provider.getExternalAddressFor(Address("akka", "", "0.0.0.0", 0))
+        val myaddr = sys.asInstanceOf[ExtendedActorSystem].provider.getExternalAddressFor(Address("akka.tcp", "", "0.0.0.0", 0))
         //        println("My external addr: " + myaddr)
 
         //Look up other actors
@@ -114,7 +145,7 @@ class PureDistributor(val index: Int, val worldSize: Int) extends Distributor
         for (host <- hosts(machinefile)) {
           for (i <- nextRank until nextRank + npp) {
             var nextHost = InetAddress.getByName(host).getHostAddress()
-            val name = (if (host == hostName) myaddr.get else "akka://FooPar" + indexOf(host, machinefile) + "@" + nextHost + ":2552") + "/user/oswald" + i
+            val name = (if (host == hostName) myaddr.get else "akka.tcp://FooPar" + indexOf(host, machinefile) + "@" + nextHost + ":2552") + "/user/oswald" + i
             //            println(hostName + ", " + globalRank + " looking up: " + name)
             ab += FooParAkkaProcess(sys.actorFor(name), i,sys,myActor,index)
           }

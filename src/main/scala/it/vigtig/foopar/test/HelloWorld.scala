@@ -8,7 +8,7 @@ class HelloWorld extends FooParApp {
   def run() {
     val hw = DistVal(globalRank)
     hw.sumD foreach pprintln
-    hw(2) foreach pprintln
+    hw(0) foreach pprintln
   }
 }
 

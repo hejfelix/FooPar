@@ -74,7 +74,7 @@ case class LazyMatrix(val SEED: Int, M: Int, N: Int, d: Option[Array[Double]] = 
   def *(that: LazyMatrix) = {
     val res = Array.ofDim[Double](M * that.N)
     var i = 0
-    MatrixOps.mult(data, that.data, res, M, N, that.N)
+    it.vigtig.foopar.test.MatrixOps.mult(data, that.data, res, M, N, that.N)
     //    while (i < M) {
     //      var j = 0
     //      while (j < N) {
