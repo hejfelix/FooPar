@@ -5,10 +5,17 @@ import it.vigtig.foopar.FooParMain
 import it.vigtig.foopar.collection.DistVal
 
 class HelloWorld extends FooParApp {
+
+  /*
+   * Concatenates "Hello, World! " with itself 
+   * for as many characters as there are processing elements
+   */
+
+  val hello = Stream.continually("Hello, World! ".toStream).flatten
+
   def run() {
-    val hw = DistVal(globalRank)
-    hw.sumD foreach pprintln
-    hw(0) foreach pprintln
+    val hw = DistVal((hello drop globalRank).head) mapD (_.toString)
+    hw reduceD (_ ++ _) foreach pprintln
   }
 }
 

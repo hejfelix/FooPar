@@ -8,7 +8,9 @@ resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/release
 
 resolvers += "Sonatype Releases" at "http://oss.sonatype.org/content/repositories/releases"
 
-libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.3"
+libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.4"
+
+libraryDependencies += "com.typesafe.akka" %% "akka-remote" % "2.3.4"
 
 libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.11.4" % "test"
 

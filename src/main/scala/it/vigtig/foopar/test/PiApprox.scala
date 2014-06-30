@@ -3,15 +3,13 @@ package it.vigtig.foopar.test
 import it.vigtig.foopar.FooParApp
 import it.vigtig.foopar.FooParMain
 import it.vigtig.foopar.collection.experimental.DistSeq
-
 import scala.util.Random
 import it.vigtig.foopar.collection.DistHashMap
 import it.vigtig.foopar.collection.DistVal
 
-//Statics are strictly forbidden
 class PiApprox extends FooParApp {
-  
-  lazy val PRECISION = 1000000*worldSize
+
+  lazy val PRECISION = 1000000 * worldSize
 
   def time(f: => Unit) = {
     val start = System.nanoTime
@@ -24,8 +22,6 @@ class PiApprox extends FooParApp {
     val Tp = time {
       pi(PRECISION) foreach (p => pprintln("Pi is approx. " + p + " compared to " + math.Pi))
     }
-
-    pprintln(Tp)
 
     def fib(n: Int): Int = if (n < 2) n else fib(n - 1) + fib(n - 2)
 

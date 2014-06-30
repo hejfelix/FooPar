@@ -24,20 +24,11 @@ trait FooParMain extends ArgsParser
     val ppn = args.getValueOr("-fpppn", "1").toInt
     worldSize = args.getValueOr("-fpnp", (ppn * (hosts(machinefile).size)).toString).toInt
     var rank = hostIndex(machinefile)
-    println(rank)
-    println(rank*ppn until (rank*ppn + ppn))
     /*
      * TODO: should read config and pick distributor!! 
      * (but reflection is still kinda yucky...)
      */
-    //    println(hostName+" is starting with "+rank*ppn)
-    /*if ((BACKEND == "mpjexpress")) {
-      val dist = new MPJExpressDistributor()
-      dist.initialize(args)
-      dist.run(newApp _)
-      dist.finish()
-    } else {*/
-    
+
     val distributors = rank * ppn until (rank * ppn + ppn) map (i =>
 
       new PureDistributor(i, worldSize))

@@ -21,57 +21,31 @@ import akka.actor.ActorDSL._
 case class Finish()
 object PureDistributor extends HostManager {
 
-//  def confForIP(ip: String, port: String) = s"""
-//akka {
-//  actor {
-//    provider = "akka.remote.RemoteActorRefProvider"
-//  }
-//  remote { 
-//		  enabled-transports = ["akka.remote.netty.tcp"]
-//  
-//		  netty.tcp.hostname = "$ip" 
-//		  netty.tcp.port = $port
-//		  netty.tcp.message-frame-size = 20 MiB
-//		  //netty.tcp {
-//		//	  write-buffer-high-water-mark = 148000b
-//			//  send-buffer-size = 148000b
-//			 // receive-buffer-size = 148000b
-//		  //}
-//  }
-//
-//  event-handlers = []
-//  loglevel=WARNING
-//  
-//}    
-//
-//  
-//my-custom-dispatcher {
-////    type = PinnedDispatcher
-//    executor = thread-pool-executor
-//    # 10 years should be enough
-////    thread-pool-executor.keep-alive-time = 315360000s
-//    # note that disabling core timeout altogether doesn't work
-//    # until ticket 2856 is fixed
-//    thread-pool-executor.allow-core-timeout = off
-//	mailbox-type = "akka.dispatch.UnboundedDequeBasedMailbox"
-//}
-//  """
-  
-   def confForIP(ip: String, port: String) = s"""
+  def confForIP(ip: String, port: String) = s"""
 akka {
   actor {
     provider = "akka.remote.RemoteActorRefProvider"
   }
-  remote {
-    enabled-transports = ["akka.remote.netty.tcp"]
-    netty.tcp {
-      hostname = "$ip" 
-      port = $port
-    }
- }
-}
-      
-      my-custom-dispatcher {
+  remote { 
+		  enabled-transports = ["akka.remote.netty.tcp"]
+  
+		  netty.tcp.hostname = "$ip" 
+		  netty.tcp.port = $port
+		  netty.tcp.message-frame-size = 20 MiB
+		  //netty.tcp {
+		//	  write-buffer-high-water-mark = 148000b
+			//  send-buffer-size = 148000b
+			 // receive-buffer-size = 148000b
+		  //}
+  }
+
+  event-handlers = []
+  loglevel=WARNING
+  
+}    
+
+  
+my-custom-dispatcher {
 //    type = PinnedDispatcher
     executor = thread-pool-executor
     # 10 years should be enough
@@ -81,13 +55,9 @@ akka {
     thread-pool-executor.allow-core-timeout = off
 	mailbox-type = "akka.dispatch.UnboundedDequeBasedMailbox"
 }
-
-		  netty.tcp.hostname = "$ip" 
-		  netty.tcp.port = $port
-
   """
+  
   val conf = confForIP(getIP, "2552")
-  println(conf)
   //  println("Loaded config: " + conf, "from " + hostName)
   private var system: Option[ActorSystem] = None
   def getSystem(machinefile: String) = synchronized {
