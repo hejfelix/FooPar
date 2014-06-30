@@ -1,0 +1,11 @@
+build
+run
+clear
+run
+eclipse
+run
+last compile_compile
+last compile:compile
+run
+last compile:compile
+eclipse
