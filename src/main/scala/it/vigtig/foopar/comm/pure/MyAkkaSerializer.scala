@@ -1,14 +1,15 @@
 package it.vigtig.foopar.comm.pure
 
-import akka.serialization.Serializer
-import it.vigtig.foopar.test.LazyMatrix
-import java.nio.ByteBuffer
-import java.io.ByteArrayOutputStream
-import java.io.ObjectOutputStream
-import it.vigtig.foopar.comm.serializer.CanSerialize
-import java.io.ObjectInputStream
-import it.vigtig.foopar.comm.serializer.FooParSerializer
 import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.nio.ByteBuffer
+
+import akka.serialization.Serializer
+import it.vigtig.foopar.comm.serializer.CanSerialize
+import it.vigtig.foopar.comm.serializer.FooParSerializer
+import it.vigtig.foopar.examples.LazyMatrix
 
 object MyAkkaSerializer {
   def main(args: Array[String]) {
@@ -17,7 +18,7 @@ object MyAkkaSerializer {
     val mas = new MyAkkaSerializer
     val bin = mas.toBinary(x)
     println(bin.size)
-    val again = mas.fromBinary(bin, None).asInstanceOf[GroupMsg[_]]
+//    val again = mas.fromBinary(bin, None).asInstanceOf[GroupMsg[_]]
 //    println(again.myRank, again.msg.mkString(","))
 
   }
