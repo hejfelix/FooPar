@@ -58,7 +58,6 @@ object FooParAkkaTest extends HostManager {
     nodes foreach (_ ! MSG("DUUDE"))
     nodes foreach (_ ! ActorList(nodes))
     _nodes = nodes
-    true
   }
 
   def startLocalSystem = {
