@@ -9,8 +9,9 @@ Installation
 Requires sbt >=0.13. On ubuntu 14.04, 
 this can be installed as such:
 
+```
 sudo apt-get install sbt
-
+```
 
 To install and run the tests in FooPar, use the following commands:
 
