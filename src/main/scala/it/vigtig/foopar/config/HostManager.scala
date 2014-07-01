@@ -8,11 +8,11 @@ trait HostManager {
 
   def countProcs(path: String, hostname: String) =
     if (new java.io.File(path).exists)
-    io.Source.fromFile(path)
-      .getLines
-      .filter(_ != "")
-      .map(_.split("\\s").head)
-      .count(_ == hostname)
+      io.Source.fromFile(path)
+        .getLines
+        .filter(_ != "")
+        .map(_.split("\\s").head)
+        .count(_ == hostname)
     else
       1
 
@@ -44,13 +44,16 @@ trait HostManager {
   def ipForHost(host: String) = InetAddress.getByName(host).getHostAddress().toString
 
   def getIP: String = {
-    var ni = NetworkInterface.getByName("eth0");
-    if (ni == null)
-      ni = NetworkInterface.getByName("wlan0")
-    val inetAddresses = ni.getInetAddresses();
+    import scala.collection.JavaConversions._
+
+    //    var ni: NetworkInterface = NetworkInterface.getByName("eth0")
+    var ni: NetworkInterface = NetworkInterface.getNetworkInterfaces.toList.filter(!_.isLoopback()).head
+//    if (ni == null)
+//      ni = NetworkInterface.getByName("wlan0")
+    val inetAddresses = ni.getInetAddresses()
 
     while (inetAddresses.hasMoreElements()) {
-      val ia = inetAddresses.nextElement();
+      val ia = inetAddresses.nextElement()
       if (!ia.isLinkLocalAddress()) {
         return ia.getHostAddress()
       }
