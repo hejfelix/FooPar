@@ -6,11 +6,11 @@ Functional Object Oriented Parallel Framework in Scala
 
 Installation
 ======
-Requires sbt >=0.13. On ubuntu 14.04, 
-this can be installed as such:
+Requires sbt >=0.13, JDK and git. 
+On ubuntu 14.04, sbt and git can be installed as such:
 
 ```
-sudo apt-get install sbt
+sudo apt-get install sbt git
 ```
 
 To install and run the tests in FooPar, use the following commands:
