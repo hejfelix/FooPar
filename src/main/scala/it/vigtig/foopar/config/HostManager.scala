@@ -6,19 +6,25 @@ import java.net.InetAddress
 
 trait HostManager {
 
-  def countProcs(file: String, hostname: String) =
-    io.Source.fromFile(file)
+  def countProcs(path: String, hostname: String) =
+    if (new java.io.File(path).exists)
+    io.Source.fromFile(path)
       .getLines
       .filter(_ != "")
       .map(_.split("\\s").head)
       .count(_ == hostname)
+    else
+      1
 
-  def hosts(file: String) =
-    io.Source.fromFile(file).getLines
-      .filter(_ != "")
-      .map(_.split("\\s"))
-      .map(_.head)
-      .toSet.toSeq
+  def hosts(path: String) =
+    if (new java.io.File(path).exists)
+      io.Source.fromFile(path).getLines
+        .filter(_ != "")
+        .map(_.split("\\s"))
+        .map(_.head)
+        .toSet.toSeq
+    else
+      Seq(hostName)
 
   def hostIndex(path: String): Int =
     if (new java.io.File(path).exists)

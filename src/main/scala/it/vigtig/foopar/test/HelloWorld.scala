@@ -14,6 +14,9 @@ class HelloWorld extends FooParApp {
   val hello = Stream.continually("Hello, World! ".toStream).flatten
 
   def run() {
+    
+    pprintln("I'm alive :-D")
+    
     val hw = DistVal((hello drop globalRank).head) mapD (_.toString)
     hw reduceD (_ ++ _) foreach pprintln
   }
