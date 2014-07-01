@@ -26,4 +26,4 @@ test:runMain FooParChecks -fpppn 8 -fpnp 8
 
 
 This will clone the repository, open the sbt project and run the scalacheck 
-test suite.
+test suite with 8 FooPar processes per node and FooPar-Number-Processes= 8
