@@ -20,17 +20,26 @@ trait HostManager {
       .map(_.head)
       .toSet.toSeq
 
-  def hostIndex(file: String) = hosts(file).indexWhere(hostName == _)
-  def indexOf(host: String, file: String) = hosts(file).indexWhere(host == _)
+  def hostIndex(path: String): Int =
+    if (new java.io.File(path).exists)
+      hosts(path).indexWhere(hostName == _)
+    else
+      0
+
+  def indexOf(host: String, path: String) =
+    if (new java.io.File(path).exists)
+      hosts(path).indexWhere(host == _)
+    else
+      0
 
   def countMap(file: String) =
     hosts(file).map(x => x -> countProcs(file, x))
 
-  def ipForHost(host:String) = InetAddress.getByName(host).getHostAddress().toString
-    
+  def ipForHost(host: String) = InetAddress.getByName(host).getHostAddress().toString
+
   def getIP: String = {
     var ni = NetworkInterface.getByName("eth0");
-    if(ni==null)
+    if (ni == null)
       ni = NetworkInterface.getByName("wlan0")
     val inetAddresses = ni.getInetAddresses();
 
