@@ -17,8 +17,6 @@ To install and run the tests in FooPar, use the following commands:
 ```
 git clone https://github.com/hejfelix/FooPar.git
 
-<enter username and password>
-
 cd FooPar/
 
 sbt
