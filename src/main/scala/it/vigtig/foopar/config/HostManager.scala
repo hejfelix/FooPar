@@ -47,7 +47,7 @@ trait HostManager {
     import scala.collection.JavaConversions._
 
     //    var ni: NetworkInterface = NetworkInterface.getByName("eth0")
-    var ni: NetworkInterface = NetworkInterface.getNetworkInterfaces.toList.filter(!_.isLoopback()).head
+    var ni: NetworkInterface = NetworkInterface.getNetworkInterfaces.toList.filter(x => !x.isLoopback() && !x.isVirtual()).head
 //    if (ni == null)
 //      ni = NetworkInterface.getByName("wlan0")
     val inetAddresses = ni.getInetAddresses()
