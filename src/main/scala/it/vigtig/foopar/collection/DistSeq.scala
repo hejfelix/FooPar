@@ -9,6 +9,11 @@ import scala.collection.mutable.Builder
 object DistSeq {
 
   def apply[T](ts: T*)(implicit fpapp: FooParApp) = fromSeq(ts)
+  def fill[T](n:Int)(f: Int => T)(implicit fpapp:FooParApp) = {
+    val g = fpapp.getGroup(n)
+    val t = if(g.partOfGroup) Some(f(g.localRank)) else None
+    new DistSeq(t,g,n)(fpapp)
+  }
 
   protected[foopar] def fromSeq[T](ts: Seq[T], group: Option[FooParGroup] = None)(implicit fpapp: FooParApp): DistSeq[T] = {
     val g: FooParGroup = if (group.isDefined) group.get else fpapp.getGroup(ts.size)

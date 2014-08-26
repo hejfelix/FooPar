@@ -62,6 +62,13 @@ trait DistTraversableLike[+T, +Repr]
     } else
       None
 
+  def minByD[B](f: T => B)(implicit cmp: Ordering[B]) =
+    if (group.partOfGroup) {
+      def min(a: T, b: T) = if (cmp.compare(f(a), f(b)) >= 0) b else a
+      group.fpReduce(elem, liftOrIdentity(min), 0).flatten
+    } else
+      None
+
   def existsD(p: T => Boolean): Option[Boolean] =
     if (group.partOfGroup) {
       val contribution = elem.map(x => if (p(x)) true else false)
